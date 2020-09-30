@@ -1,5 +1,6 @@
 from money import Money
 
+
 class Check(Money):
     """
     A check with a value and number.
@@ -27,7 +28,7 @@ class Check(Money):
 
         Check number is assigned automatically.
         Arguments:
-			amount - value of the check
+            amount - value of the check
         """
         super().__init__(amount)
         self.__number = Check._next_check_number
@@ -37,15 +38,15 @@ class Check(Money):
     def check_number(self):
         """return the check number"""
         return self.__number
-    
-    def __eq__(self,other):
+
+    def __eq__(self, other):
         """Two checks are equal if they have same value and check number"""
-        if not isinstance(other,Check):
+        if not isinstance(other, Check):
             return False
         return self.check_number == other.check_number and self.value == other.value
 
     def __str__(self):
         return f"Check number {self.__number:d} for {super().__str__()}"
-    
+
     def __repr__(self):
         return f"Check({self.value})"

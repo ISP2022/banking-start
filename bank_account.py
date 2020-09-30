@@ -1,16 +1,17 @@
 from money import Money
 from check import Check
 
+
 class BankAccount:
     """
     A BankAccount with a minimum required balance (default is 0)
     that accepts deposit of Money or Checks.  The balance is always the
-    total of deposits minus withdraws, but the value of a check is not 
+    total of deposits minus withdraws, but the value of a check is not
     available for withdraw until `clear_check(check)` is called.
 
     The available balance (`available` property) is the amount that can
     be withdrawn so that a) no not-yet-clear checks are withdrawn, and
-    b) the balance after withdraw is at least the minimum balance. 
+    b) the balance after withdraw is at least the minimum balance.
 
     >>> acct = BankAccount("Taksin Shinawat",1000)  # min required balance is 1,000
     >>> acct.balance
@@ -64,32 +65,32 @@ class BankAccount:
         self.__min_balance = float(min_balance)
         # checks deposited and waiting to be cleared
         self.__pending_checks = []
-    
+
     @property
     def balance(self) -> float:
         """Balance in this account (float), as a read-only property"""
         return self.__balance
-    
+
     @property
     def available(self) -> float:
-        """Available balance in this account (float), as a read-only property"""
+        """Available balance in this account (float), read-only property"""
         sum_holds = sum(check.value for check in self.__pending_checks)
         avail = self.balance - self.min_balance - sum_holds
-        return avail if (avail>0) else 0.0
-    
+        return avail if (avail > 0) else 0.0
+
     @property
     def min_balance(self) -> float:
-        """Minimum required balance for this account, as read-only property"""
+        """Minimum required balance for this account, read-only property"""
         return self.__min_balance
-    
+
     @property
     def account_name(self):
         """The account name. Read-only."""
         return self.__name
-    
+
     def deposit(self, money: Money):
-        """Deposit money or check into the account. 
-        
+        """Deposit money or check into the account.
+
         Arguments:
             money - Money or Check object with a positive value.
         Throws:
@@ -113,34 +114,35 @@ class BankAccount:
 
         Arguments:
             check - reference to a previously deposited check.
-        
+
         Throws:
-            ValueError if the check isn't in the list of checks waiting to clear
+            ValueError if the check isn't in the list of uncleared checks
         """
         if check in self.__pending_checks:
             self.__pending_checks.remove(check)
-    
+
     def withdraw(self, amount: float) -> Money:
         """
-        Withdraw an amount from the account. 
+        Withdraw an amount from the account.
 
         Arguments:
-            amount - (number) the amount to withdraw, at most the available balance
+            amount - (number) the amount to withdraw,
+                     at most the available balance
         Returns:
             a Money object for the amount requested.
         Throws:
              ValueError if amount exceeds available balance or is not positive.
         """
         if amount <= 0:
-            raise ValueError("Amount to withdraw must be positive") 
+            raise ValueError("Amount to withdraw must be positive")
         if amount >= self.available:
             raise ValueError(f"Amount exceeds available balance")
         # try to create the money before deducting from balance,
         # in case Money throws an exception.
         m = Money(amount)
         self.__balance -= amount
-        return m 
-    
+        return m
+
     def __str__(self):
         """String representation of the bank account.
            Includes the acct name but not the balance.

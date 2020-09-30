@@ -4,6 +4,7 @@ since Python automatically reverses direction of comparison
 when only one is explicitly overloaded.
 """
 
+
 class Money:
     """
     Money is an immutable object with a value and currency.
@@ -31,7 +32,7 @@ class Money:
             raise ValueError("Value of money must be positive")
         self.__value = value
         self.__currency = currency
-        
+
     @property
     def value(self):
         return self.__value
@@ -39,7 +40,7 @@ class Money:
     @property
     def currency(self):
         return self.__currency
-    
+
     def __add__(self, money):
         return Money(self.__value + money.__value)
 
@@ -69,7 +70,7 @@ class Money:
         True
         """
         return self.__value >= money.__value
-    
+
     def __eq__(self, other):
         if not isinstance(other, Money):
             return False
@@ -78,6 +79,6 @@ class Money:
 
     def __str__(self):
         return f"{self.value:,.2f} {self.__currency}"
-    
+
     def __repr__(self):
         return f"Money({self.value})"
