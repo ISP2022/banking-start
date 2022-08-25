@@ -1,7 +1,7 @@
 """
-Overload the operators > and >= and get < and <= for free,
+Overload the operators > and >= and you get < and <= for free,
 since Python automatically reverses direction of comparison
-when only one is explicitly overloaded.
+when only one operator is explicitly overloaded.
 """
 
 
@@ -10,6 +10,15 @@ class Money:
     Money is an immutable object with a value and currency.
     For this application the currency is fixed as Baht,
     so don't mess with it.
+
+    You can add Money objects that have the same currency, 
+    including Checks (a subclass) and the result is Money.
+    You can compare Money using ==, so you can write:
+    ```
+    total = Money(500) + Money(100)
+    total == Money(600)   # True
+    ```
+
     >>> m = Money(1000)
     >>> m.value
     1000
@@ -19,7 +28,7 @@ class Money:
     >>> str(m2)
     '1,100.00 Baht'
     >>> m2   # invokes m2.__repr__()
-    Money(1100)
+    Money(1100, 'Baht')
     >>> m2 > m
     True
     >>> m2 = m2 - Money(100)
@@ -28,27 +37,30 @@ class Money:
     """
     def __init__(self, value: float, currency: str = 'Baht'):
         """Initialize a new money object with given value."""
-        if value <= 0:
-            raise ValueError("Value of money must be positive")
         self.__value = value
         self.__currency = currency
 
     @property
-    def value(self):
+    def value(self) -> float:
+        """The value of this Money, as a number."""
         return self.__value
 
     @property
-    def currency(self):
+    def currency(self) -> str:
+        """The currency of this Money object."""
         return self.__currency
 
     def __add__(self, money):
-        return Money(self.__value + money.__value)
+        """Add a money object to this one and return the sum."""
+        return Money(self.__value + money.__value, self.currency)
 
     def __sub__(self, money):
-        return Money(self.__value - money.__value)
+        """Subtract a money object to this one and return the difference."""
+        return Money(self.__value - money.__value, self.currency)
 
     def __gt__(self, money):
-        """
+        """Compare money objects by value, ignoring currency.
+
         >>> m = Money(100)
         >>> m2 = Money(101)
         >>> m > m2
@@ -81,4 +93,4 @@ class Money:
         return f"{self.value:,.2f} {self.__currency}"
 
     def __repr__(self):
-        return f"Money({self.value})"
+        return f"Money({self.value}, '{self.__currency}')"

@@ -5,12 +5,15 @@ from check import Check
 class BankAccount:
     """
     A BankAccount with a minimum required balance (default is 0)
-    that accepts deposit of Money or Checks.  The balance is always the
-    total of deposits minus withdraws, but the value of a check is not
-    available for withdraw until `clear_check(check)` is called.
+    that accepts deposits of Money or Checks.  
+    A BankAccount has a balance and an "available balance".
+    The balance is always the total of all deposits minus withdraws, 
+    but the value of a check is not available for withdraw until 
+    `clear_check(check)` is called to "clear" the check.
 
-    The available balance (`available` property) is the amount that can
-    be withdrawn so that a) no not-yet-clear checks are withdrawn, and
+    The available balance (`available` property) is the amount that 
+    can be withdrawn such that 
+    a) value of checks not yet cleared cannot be withdrawn, and
     b) the balance after withdraw is at least the minimum balance.
 
     >>> acct = BankAccount("Taksin Shinawat",1000)  # min required balance is 1,000
@@ -34,10 +37,10 @@ class BankAccount:
        ...
     ValueError: Amount exceeds available balance
     >>> acct.clear_check(c)
-    >>> acct.available
+    >>> acct.available                 # now the check value is available
     49000.0
-    >>> acct.withdraw(30000)           # try to withdraw 30,000
-    Money(30000)
+    >>> acct.withdraw(30000)           # withdraw 30,000 should work
+    Money(30000, 'Baht')
     >>> acct.balance
     20000.0
     >>> acct.withdraw(20000)           # try to withdraw EVERYTHING
@@ -45,7 +48,7 @@ class BankAccount:
        ...
     ValueError: Amount exceeds available balance
     >>> acct.withdraw(15000)
-    Money(15000)
+    Money(15000, 'Baht')
     >>> acct.balance
     5000.0
     """
@@ -53,7 +56,7 @@ class BankAccount:
     def __init__(self, name: str, min_balance: float = 0.0):
         """Create a new account with given name.
 
-        Arguments:
+        Args:
             name - the name for this account
             min_balance - the minimum required balance, a non-negative number.
                 Default min balance is zero.
@@ -68,28 +71,28 @@ class BankAccount:
 
     @property
     def balance(self) -> float:
-        """Balance in this account (float), as a read-only property"""
+        """Balance in the account (float) as a value without a currency."""
         return self.__balance
 
     @property
     def available(self) -> float:
-        """Available balance in this account (float), read-only property"""
+        """Available balance in this account (float), read-only."""
         sum_holds = sum(check.value for check in self.__pending_checks)
         avail = self.balance - self.min_balance - sum_holds
         return avail if (avail > 0) else 0.0
 
     @property
     def min_balance(self) -> float:
-        """Minimum required balance for this account, read-only property"""
+        """Minimum required balance for this account, as a number."""
         return self.__min_balance
 
     @property
     def account_name(self):
-        """The account name. Read-only."""
+        """The account name."""
         return self.__name
 
     def deposit(self, money: Money):
-        """Deposit money or check into the account.
+        """Deposit money or check into the bank account.
 
         Arguments:
             money - Money or Check object with a positive value.
@@ -116,7 +119,7 @@ class BankAccount:
             check - reference to a previously deposited check.
 
         Throws:
-            ValueError if the check isn't in the list of uncleared checks
+            ValueError if the check is not in the list of uncleared checks
         """
         if check in self.__pending_checks:
             self.__pending_checks.remove(check)
@@ -125,7 +128,7 @@ class BankAccount:
         """
         Withdraw an amount from the account.
 
-        Arguments:
+        Args:
             amount - (number) the amount to withdraw,
                      at most the available balance
         Returns:
