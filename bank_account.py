@@ -6,16 +6,30 @@ class BankAccount:
     """
     A BankAccount with a minimum required balance (default is 0)
     that accepts deposits of Money or Checks.  
+
     A BankAccount has a balance and an "available balance".
-    The balance is always the total of all deposits minus withdraws, 
-    but the value of a check is not available for withdraw until 
-    `clear_check(check)` is called to "clear" the check.
+    The balance is always the total of all deposits minus withdraws. 
+    However, the value of a check is not available for withdraw until 
+    the check clears by calling `clear_check(check)`. This simulates
+    the "clearing" of checks in a real bank.
 
     The available balance (`available` property) is the amount that 
     can be withdrawn such that 
     a) value of checks not yet cleared cannot be withdrawn, and
     b) the balance after withdraw is at least the minimum balance.
 
+    An account may have a minimum required balance. You can open a
+    new account with balance 0 (less than min required balance),
+    but you can never withdraw if it would cause the balance to fall
+    below the min required balance.
+
+    Checks that have not cleared yet can still be used to satisfy the
+    minimum balance requirement.  So, if the minimum required balance
+    is 1000 and you deposit 2000 (cash) and 500 (check), you can
+    immediately withdraw 1500, since the check contributes 500 to 
+    the required balance.
+
+    Example:
     >>> acct = BankAccount("Taksin Shinawat",1000)  # min required balance is 1,000
     >>> acct.balance
     0.0

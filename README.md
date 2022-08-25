@@ -1,9 +1,7 @@
 ## Unit Testing Problem
 
 Write unit tests for the BankAccount class in the file `bank_account.py`.    
-Put your tests in a file named `bank_account_test.py`.
-
-Problem description is given on the web.
+Put your tests in a file named `test_bank_account.py`.
 
 1. Write tests for the *specification* not the actual BankAccount code.
 2. Write tests to verify *any* BankAccount code that has the same methods -- not just the sample code.
@@ -17,7 +15,7 @@ Problem description is given on the web.
 
 ## What to Submit
 
-Create a file named `bank_account_test.py` containing your unit tests.
+Create a file named `test_bank_account.py` containing your unit tests.
 
 Add it to the repository and push to Github.
 
