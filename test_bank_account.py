@@ -33,7 +33,7 @@ class BankAccountTest(unittest.TestCase):
         self.assertEqual(900.0, wd.value) 
         self.assertEqual(100, self.account.balance)  # TODO fix this
 
-     @unittest.skip("Not done yet.")
-     def test_withdraw_invalid_amount(self):
+    @unittest.skip("Not done yet.")
+    def test_withdraw_invalid_amount(self):
         """You cannot withdraw more than the balance of account."""
         self.fail("Write this test. withdraw should raise a ValueError.")
